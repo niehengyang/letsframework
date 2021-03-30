@@ -1,15 +1,10 @@
 package server
 
 import (
-	"context"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-redis/redis/v8"
-	"github.com/jinzhu/gorm"
-	"go.ebupt.com/lets/pkg/lconfig"
-	"go.ebupt.com/lets/pkg/llog"
-	"go.ebupt.com/lets/server/appconfig"
+	"go.ebupt.com/lets/app"
 )
 
 const (
@@ -21,16 +16,7 @@ const (
 	VERSION = "0.0.1"
 )
 
-var AppConfig appconfig.AppConfig
-var RuntimePath string
-
-var LConfig *lconfig.LConfig
-var LLog *llog.LLog
-
-var LDB *gorm.DB
 var GinEngine *gin.Engine
-var LRedis *redis.Client
-var LRedisCtx context.Context
 
 // var LRedis interface{}
 
@@ -38,22 +24,8 @@ type LetsApi struct {
 }
 
 func New(configFile string) *LetsApi {
-
-	//init Config
-	configInit(configFile)
-
-	//init Logger
-	loggerInit()
-
-	//init Database
-	dbInit()
-
-	//init Redis
-	LRedisCtx = context.Background()
-	redisInit()
-
 	var ginRunMode string
-	if AppConfig.RunMode == Debug {
+	if app.AppConfig.RunMode == Debug {
 		ginRunMode = gin.DebugMode
 	} else {
 		ginRunMode = gin.ReleaseMode
@@ -61,7 +33,7 @@ func New(configFile string) *LetsApi {
 	gin.SetMode(ginRunMode)
 
 	GinEngine = gin.New()
-	LLog.Info("LetsFramework.GinEngine inited")
+	app.LLog.Info("LetsFramework.GinEngine inited")
 	return &LetsApi{}
 }
 
@@ -74,12 +46,12 @@ func (l *LetsApi) BindRouter(routerBinder routerBinder) {
 
 func (l *LetsApi) Go() {
 	defer l.destruct()
-	LLog.Info(fmt.Sprintf("LetsFramework.ApiServer run in 0.0.0.0:%v", AppConfig.Server.Port))
-	GinEngine.Run(fmt.Sprintf("0.0.0.0:%v", AppConfig.Server.Port))
+	app.LLog.Info(fmt.Sprintf("LetsFramework.ApiServer run in 0.0.0.0:%v", app.AppConfig.Server.Port))
+	GinEngine.Run(fmt.Sprintf("0.0.0.0:%v", app.AppConfig.Server.Port))
 }
 
 func (l LetsApi) destruct() {
 
-	LLog.Info(fmt.Sprintf("LetsFramework.ApiServer 0.0.0.0:%v is stoped", AppConfig.Server.Port))
+	app.LLog.Info(fmt.Sprintf("LetsFramework.ApiServer 0.0.0.0:%v is stoped", app.AppConfig.Server.Port))
 
 }
