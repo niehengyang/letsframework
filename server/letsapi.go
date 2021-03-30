@@ -23,7 +23,7 @@ var GinEngine *gin.Engine
 type LetsApi struct {
 }
 
-func New(configFile string) *LetsApi {
+func New() *LetsApi {
 	var ginRunMode string
 	if app.AppConfig.RunMode == Debug {
 		ginRunMode = gin.DebugMode

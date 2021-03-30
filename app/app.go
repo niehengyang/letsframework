@@ -5,9 +5,9 @@ import (
 
 	"github.com/go-redis/redis/v8"
 	"github.com/jinzhu/gorm"
+	"go.ebupt.com/lets/app/appconfig"
 	"go.ebupt.com/lets/pkg/lconfig"
 	"go.ebupt.com/lets/pkg/llog"
-	"go.ebupt.com/lets/server/appconfig"
 )
 
 const (
