@@ -16,6 +16,9 @@ type DatabaseConnection struct {
 }
 
 func New(connection DatabaseConnection) (*gorm.DB, error) {
-	db, err := gorm.Open("mysql", fmt.Sprintf("%v:%v@/%v?charset=utf8&parseTime=True&loc=Local", connection.User, connection.Password, connection.Database))
+
+	fmt.Println("Ip is :", connection.IP)
+
+	db, err := gorm.Open("mysql", fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?charset=utf8&parseTime=True&loc=Local", connection.User, connection.Password, connection.IP, connection.Port, connection.Database))
 	return db, err
 }
