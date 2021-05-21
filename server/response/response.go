@@ -30,9 +30,14 @@ func (hr *httpResponse) Data(data interface{}) {
 	hr.c.JSON(200, data)
 }
 
-func (hr *httpResponse) Pagination(option *PageOption, result interface{}) {
+func (hr *httpResponse) Pagination(option *PageOption, result interface{}, callback func(interface{}) interface{}) {
 	paginator := paging(option, result)
+	paginator.Records = callback(paginator.Records)
 	hr.c.JSON(200, paginator)
+}
+
+func (hr *httpResponse) AfterPaginator(result interface{}) interface{} {
+	return result
 }
 
 func (hr *httpResponse) Success(message interface{}) {
